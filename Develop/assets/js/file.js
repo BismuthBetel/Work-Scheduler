@@ -1,73 +1,64 @@
 var events = {};
 
-var eventTableEl = document.querySelector(".event-body");
-
-// create event input
-
-var createEvent = function (eventText) {
 
 
-    var eventParagraph = $("<p>").addClass("textarea").text(eventText);
 
-    //append p element to hard coded td element
-
-    $(".event-body").append(eventParagraph);
-}
 
 var auditTime = function (eventTime) {
     // get time from span element in table element
     var time = $(eventTime).find("span").text().trim();
+
+    var now = moment();
+    console.log(now);
 }
 //Time blocks should highlight depending on if its in the past, present, or future
 
+//load events
+
+var loadEvents = function () {
+    events = JSON.parse(localStorage.getItem("events"));
+
+    // if nothing in localstorage, create a new object to track all time blocks
+    if (!events) {
+        events = {
+            "9am": [],
+            "10am": [],
+            "11am": [],
+            "12am": [],
+            "1pm": [],
+            "2pm": [],
+            "3pm": [],
+            "4pm": [],
+            "5pm": []
+
+        }
+    }
+}
+
+
+//ssave button class to identiy to let button (s) know they are saving 
+$("#hour-9, #hour-10, .saveBtn").click(function (event) {
+
+    //get textarea text
+    var eventText = $(".description").val();
+    console.log("hi");
+    saveEvents(eventText);
+})
 
 //save event function
-var saveEvents = function () {
-    localStorage.setItem("events", JSON.stringify(events));
+var saveEvents = function (eventText) {
+    // localStorage.setItem("events", JSON.stringify(events));
+    localStorage.setItem("events", JSON.stringify(eventText));
+
 };
-// when clicking on <p> element should convert to textarea
 
-$(".events").on("click", "td", function () {
-    var text = $(this).text().trim();
 
-    var textInput = $("<textarea>")
-        .addClass("form-control")
-        .val(text);
-
-    $(this).replaceWith(textInput);
-    textInput.trigger("focus");
-});
-// blur out of focus
-
-$(".events").on("blur", "textarea", function () {
-    var text = $(this)
-        .val()
-        .trim();
-
-    //get parent's id attribute
-    var status = $(this)
-        .closest(".events")
-        .attr("id")
-        .replace("tbody", "");
-
-    //get event's position in td
-    var index = $(this)
-        .closest(".textarea")
-        .index();
-
-    // events[status][index].text = text;
-    saveEvents();
-
-    //recreate p element
-    var eventP = $("<p>")
-        .addClass("textarea")
-        .text(text);
-
-    // replace textarea with p element
-    $(this).replaceWith(eventP);
-})
 //When clicking in another place besides text area, the text should be saved
 
 //When saved, the data is saved to localStorage and is persistent
 
-createEvent();
+
+
+//function calls
+// createEvent();
+loadEvents();
